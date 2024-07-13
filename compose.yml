@@ -1,10 +1,13 @@
 
 services:
-  server:
+  api:
+    container_name: css-api
     build:
       context: .
     environment:
       NODE_ENV: production
+    depends_on: 
+      - mongo
     ports:
       - 3001:3001
     volumes:
@@ -12,24 +15,23 @@ services:
       - /usr/src/api/node_modules
       
   mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    container_name: mongodb-database
+    image: mongo:latest
     volumes:
-      - mongo-db:/data/db
+      - mongodb:/data/db
 
   mongo-express:
+    container_name: mongo-express-ui
     image: mongo-express
     restart: always
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-      ME_CONFIG_BASICAUTH: false
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: '27017'
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
 
 volumes:
-  mongo-db:
+  mongodb:
+
