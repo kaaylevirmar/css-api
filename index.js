@@ -1,13 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const app = express();
+const mongoose = require('mongoose');
+const userRoutes = require('./Routes/userRoutes');
 const PORT = 3001;
 
+app.use(express.json());
 
-
-app.get('/',(req,res)=>{
-        res.send('hello asdsadsad');
-})
+app.use(userRoutes);
 
 
 
@@ -20,6 +19,4 @@ app.listen(PORT,()=>{
     .catch((e)=>{
         console.log(e);
     })
-
-    
 })
