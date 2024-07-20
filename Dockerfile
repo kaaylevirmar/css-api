@@ -20,6 +20,7 @@ RUN npm install -g nodemon
 # Copy the rest of the source files into the image.
 COPY . .
 
+RUN chown -R node:node /usr/src/api
 # Run the application as a non-root user.
 USER node
 

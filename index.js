@@ -1,12 +1,19 @@
+// imports
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const cors = require('cors');
 const userRoutes = require('./Routes/userRoutes');
+
 const PORT = 3001;
 
 app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost'
+}))
 
-app.use(userRoutes);
+//Routes
+app.use(userRoutes);    
 
 
 
