@@ -48,5 +48,5 @@ exports.updateUser = async (req,res) => {
 exports.deleteUser = async (req,res) => {
     const id = req.params.id
     const deletedUser = await User.findByIdAndDelete(id);
-    res.send(`${deletedUser.firstName} has been deleted`);
+    res.json({ deletedUser });
 }
