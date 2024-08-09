@@ -4,12 +4,11 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const userRoutes = require('./Routes/userRoutes');
-
-const PORT = 3001;
+require('dotenv').config();
 
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost'
+    origin: `${process.env.APP_URL}`
 }))
 
 //Routes
@@ -17,8 +16,8 @@ app.use(userRoutes);
 
 
 
-app.listen(PORT,()=>{
-    console.log(`Server is running in ${PORT}`);
+app.listen(process.env.PORT,()=>{
+    console.log(`Server is running in ${process.env.PORT}`);
     mongoose.connect('mongodb://mongo:27017/my-app')
     .then((res)=>{
         console.log('Connected to mongodb database');
