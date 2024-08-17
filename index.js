@@ -8,6 +8,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 require('dotenv').config();
 
+
 app.use(session({
     secret: 'secretKey',
     resave: false,
