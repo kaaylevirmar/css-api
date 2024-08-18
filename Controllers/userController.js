@@ -13,19 +13,24 @@ exports.showUser = async (req,res) => {
 }
 
 exports.createUser = async (req,res) => {
-    const {username,password, email, firstName, lastName} = req.body
 
-    const userData = new User({
-        username: username,
-        password: password,
-        email: email,
-        firstName: firstName,
-        lastName: lastName
-    })
-
-    const data = await  userData.save();
-
-    res.send('added new user');
+    try{
+        const {username,password, email, firstName, lastName} = req.body
+    
+        const userData = new User({
+            username: username,
+            password: password,
+            email: email,
+            firstName: firstName,
+            lastName: lastName
+        })
+    
+        const data = await  userData.save();
+    
+        res.status(201).json({message:'User created succesfully!', type: 'success'});
+        }catch(error){
+            console.log(error);
+        };
 }
 
 exports.updateUser = async (req,res) => {
