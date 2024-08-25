@@ -6,4 +6,6 @@ module.exports.userSchemaValidation = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    role: Joi.string().required(),
 })

@@ -13,16 +13,16 @@ exports.showUser = async (req,res) => {
 }
 
 exports.createUser = async (req,res) => {
-
     try{
-        const {username,password, email, firstName, lastName} = req.body
+        const {username,password, email, firstName, lastName, role} = req.body
     
         const userData = new User({
             username: username,
             password: password,
             email: email,
             firstName: firstName,
-            lastName: lastName
+            lastName: lastName,
+            role: role
         })
     
         const data = await  userData.save();
