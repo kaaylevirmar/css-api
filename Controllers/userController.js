@@ -2,8 +2,27 @@ const User = require('../Models/User');
 
 
 exports.allUsers = async (req,res) => {
-    const user = await User.find();
-    res.json(user);
+    try {
+        const {name, role} = req.query;
+
+        let filter = {};
+
+        if (name) {
+            const nameRegex = new RegExp(name, 'i');
+            filter.$or = [
+                { firstName: nameRegex },
+                { lastName: nameRegex }
+            ];
+        }
+        if (role) {
+            filter.role = role;
+        }
+        const user = await User.find(filter);
+        res.json(user);
+        
+    } catch (error) {
+        res.status(201).json({message:'No data Found!', type: 'danger'});
+    }
 }
 
 exports.showUser = async (req,res) => {
