@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const userRoutes = require('./Routes/userRoutes');
 require('dotenv').config();
-
+//tempo
 app.use(express.json());
 app.use(cors({
     origin: `${process.env.APP_URL}`
