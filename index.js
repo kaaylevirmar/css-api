@@ -18,7 +18,7 @@ app.use(userRoutes);
 
 app.listen(process.env.PORT,()=>{
     console.log(`Server is running in ${process.env.PORT}`);
-    mongoose.connect('mongodb://mongo:27017/my-app')
+    mongoose.connect('mongodb://mongo:27017/css-db')
     .then((res)=>{
         console.log('Connected to mongodb database');
     })
