@@ -32,7 +32,6 @@ exports.showUser = async (req,res) => {
     const id = req.params.id;
     const user = await User.findById(id).select('-password');
     res.json(user);
-    // res.json(req.user)
 }
 
 exports.createUser = async (req,res) => {
@@ -59,26 +58,39 @@ exports.createUser = async (req,res) => {
         };
 }
 
-exports.userLogin = async (req,res) => {
-    const {username, password} = req.body;
-    
-    const user = await User.findOne({username:username});
+exports.userLogin = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({ username: username });
 
-
-
-    if(user && (await bcrypt.compare(password,user.password))){
-        res.json({
-            _id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,  
-            role: user.role,
-            token: generateToken(user._id)
-        })
+        if (user && (await bcrypt.compare(password, user.password))) {
+            return res.status(200).json({
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,  
+                role: user.role,
+                token: generateToken(user._id),
+                isAuthenticated: true,
+                message: 'You have successfully logged in!',
+                type: "success"
+            });
+        } else {
+            return res.status(401).json({
+                message: 'Invalid credentials',
+                type: 'danger'
+            });
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Server error',
+            type: 'error'
+        });
     }
+};
 
-    res.json({message: 'hello'});
-}
 
 exports.updateUser = async (req,res) => {
     const id = req.params.id;

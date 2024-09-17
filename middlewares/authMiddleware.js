@@ -3,40 +3,31 @@ const User = require('../Models/User');
 
 
 exports.isLoggedIn = async (req, res, next) => {
-    const token = req.headers.authentication;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if(decoded && User.findOne(decoded.id)){
-        next()
-    } else {
-        res.status(401).json({message: 'Not Authenticated'});
+    try {
+        
+        const token = req.headers.authorization;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if(decoded && User.findOne(decoded.id)){
+            next()
+        } else {
+            res.status(401).json({message: 'Not Authenticated'});
+        }
+    } catch (error) {
+        console.log(error);
     }
+}
 
-
-    // let token;
-
-    // if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
-    //     try {
-    //         token = req.headers.authorization.split('=')[1];
-    //         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    //         const user = await User.findById(decoded.id).select('-password');
-    //         if(user){
-
-    //         } else {
-    //             res.status(401).json({message: 'Not Authenticated'})
-    //         } 
-            
-    //     } catch (error) {
-    //         res.status(401);
-    //         throw new Error('Not Authorized');
-    //     }
-    // }
-
-    // if(!token){
-    //     res.status(401);
-    //     throw new Error('No token');
-    // }
-
+exports.adminRoute = async(req,res, next) => {
+    try {
+        const token = req.headers.authentication;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const { role } = await User.findById(decoded.id);
+        if(decoded && role === "admin"){
+            next();
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
