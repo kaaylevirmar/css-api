@@ -1,4 +1,7 @@
 const User = require('../Models/User');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { use } = require('../Routes/userRoutes');
 
 
 exports.allUsers = async (req,res) => {
@@ -27,17 +30,21 @@ exports.allUsers = async (req,res) => {
 
 exports.showUser = async (req,res) => {
     const id = req.params.id;
-    const user = await User.findById(id);
-    res.json(user)
+    const user = await User.findById(id).select('-password');
+    res.json(user);
+    // res.json(req.user)
 }
 
 exports.createUser = async (req,res) => {
+
     try{
-        const {username,password, email, firstName, lastName, role} = req.body
-    
+        const {username, password, email, firstName, lastName, role} = req.body
+        
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const userData = new User({
             username: username,
-            password: password,
+            password: hashedPassword,
             email: email,
             firstName: firstName,
             lastName: lastName,
@@ -50,6 +57,27 @@ exports.createUser = async (req,res) => {
         }catch(error){
             console.log(error);
         };
+}
+
+exports.userLogin = async (req,res) => {
+    const {username, password} = req.body;
+    
+    const user = await User.findOne({username:username});
+
+
+
+    if(user && (await bcrypt.compare(password,user.password))){
+        res.json({
+            _id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,  
+            role: user.role,
+            token: generateToken(user._id)
+        })
+    }
+
+    res.json({message: 'hello'});
 }
 
 exports.updateUser = async (req,res) => {
@@ -73,4 +101,11 @@ exports.deleteUser = async (req,res) => {
     const id = req.params.id
     const deletedUser = await User.findByIdAndDelete(id);
     res.json({ deletedUser });
+}
+
+
+const generateToken = (id) => {
+    return jwt.sign({id},process.env.JWT_SECRET, {
+        expiresIn: '30d'
+    });
 }
