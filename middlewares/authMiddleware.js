@@ -5,7 +5,8 @@ const User = require('../Models/User');
 exports.isLoggedIn = async (req, res, next) => {
     try {
         
-        const token = req.headers.authorization;
+        const reqToken = req.headers.authorization;
+        const token = reqToken.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if(decoded && User.findOne(decoded.id)){
             next()
@@ -19,7 +20,8 @@ exports.isLoggedIn = async (req, res, next) => {
 
 exports.adminRoute = async(req,res, next) => {
     try {
-        const token = req.headers.authentication;
+        const reqToken = req.headers.authorization;
+        const token = reqToken.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const { role } = await User.findById(decoded.id);
         if(decoded && role === "admin"){
